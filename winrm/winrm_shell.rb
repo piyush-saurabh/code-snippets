@@ -1,7 +1,5 @@
 require 'winrm'
 
-# Author: Alamot
-
 conn = WinRM::Connection.new( 
   endpoint: 'https://IP:PORT/wsman',
   transport: :ssl,
