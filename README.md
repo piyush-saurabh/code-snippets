@@ -7,3 +7,6 @@ Usage :  **_./port-knocking.sh IP port1 port2 port3 && ssh username@ip_**
 
 **ssrf_scan.py** : If we find SSRF vulnerability, then this script can be used to scan the internal network for the open web ports. This script can be modified for other scans related to internal network.
 Usage :  **python ssrf_scan.py**
+
+**decrypt-cpassword.rb** : This ruby script will decrypt the password stored in Groups.xml file.
+Usage :  **ruby decrypt-cpassword.rb**
