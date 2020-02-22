@@ -1,6 +1,6 @@
 // Very simple implementation of a container
-// Ref: https://youtu.be/MHv6cWjvQjM
-// Run: /usr/bin/sudo /usr/local/go/bin/go run main.go run /bin/bash
+// Ref: https://youtu.be/MHv6cWjvQjM , https://twitter.com/b0rk/status/1230606332681691136/photo/1
+// Run: /usr/bin/sudo /usr/local/go/bin/go run main.go run /bin/sh
 
 package main
 
@@ -56,7 +56,7 @@ func child() {
 	fmt.Printf("Running %v \n", os.Args[2:])
 
 	// Create a control group
-	cg()
+	//cg()
 
 	cmd := exec.Command(os.Args[2], os.Args[3:]...)
 	cmd.Stdin = os.Stdin
@@ -66,15 +66,17 @@ func child() {
 	// [UTS namespace demo] Set the hostname inside the container
 	must(syscall.Sethostname([]byte("container")))
 
-	// // [PID namespace demo] Mount a file system inside the container and make it as the root using chroot
-	// must(syscall.Chroot("/path/to/some/filesystem"))
-	// must(syscall.Chdir("/"))
+	// [PID namespace demo] Mount a file system inside the container and make it as the root using chroot
+	// Download the container from http://bit.ly/fish-container
+	// Extract the content of the file system in the directory /tmp/container-root on the host
+	must(syscall.Chroot("/tmp/container-root"))
+	must(syscall.Chdir("/"))
 
-	// // Mount the proc so that we can us ps to see the running processes. Also unmount this at the end
-	// must(syscall.Mount("proc", "proc", "proc", 0, ""))
+	// Mount the proc so that we can us ps to see the running processes. Also unmount this at the end
+	must(syscall.Mount("proc", "proc", "proc", 0, ""))
 
-	// [Mount namespace demo] Mount /dev/shm
-	must(syscall.Mount("/dev/shm", "/tmp", "tmpfs", 0, ""))
+	// [Mount namespace demo] Mount demo
+	must(syscall.Mount("demo", "/tmp", "tmpfs", 0, ""))
 
 	// fork and exec syscall
 	must(cmd.Run())
@@ -83,7 +85,7 @@ func child() {
 	// must(syscall.Unmount("proc", 0))
 
 	// [Mount namespace demo] Unmount /dev/shm
-	must(syscall.Unmount("/dev/shm", 0))
+	must(syscall.Unmount("demo", 0))
 
 }
 
